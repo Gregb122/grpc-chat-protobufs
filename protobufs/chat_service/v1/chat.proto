@@ -1,0 +1,77 @@
+syntax = "proto3";
+package chat_service.v1;
+option go_package = "github.com/gregb122/grpc-chat-protobufs/gen/go/chat_service";
+
+service ChatService {
+    rpc GetAllUsers (GetAllUsersRequest) returns (GetAllUsersResponse);
+    rpc RecieveMessages (RecieveMessagesRequest) returns (stream RecieveMessagesResponse);
+    rpc SendMessage (SendMessageRequest) returns (SendMessageResponse);
+    rpc RegisterUser (RegisterUserRequest) returns (RegisterUserResponse);
+    rpc LoginUser (LoginUserRequest) returns (LoginUserResponse);
+}
+
+//-------------------------------------//
+
+message GetAllUsersRequest {
+}
+
+message GetAllUsersResponse {
+    repeated UserInfo users = 1;
+}
+//-------------------------------------//
+message RecieveMessagesRequest {
+    string to_user_login = 1;
+}
+
+message RecieveMessagesResponse {
+    Message message = 1;
+}
+//-------------------------------------//
+message SendMessageRequest {
+    Message message = 1;
+}
+
+message SendMessageResponse {
+}
+//-------------------------------------//
+
+message UserInfo {
+    string login = 1;
+    string full_name = 2;
+}
+
+message MessageBody {
+    string body = 1;
+    string timestamp = 2;
+}
+
+message Message {
+    string from_user_login = 1;
+    string to_user_login = 2;
+    MessageBody body = 3;
+}
+
+message EtcdUserInfo {
+    UserInfo user_info = 1;
+    bool is_active = 2;
+    string hashed_password = 3;
+    string register_timestamp = 4;
+}
+//-------------------------------------//
+
+message LoginUserRequest {
+    string login = 1;
+    string password = 2;
+}
+
+message LoginUserResponse {
+}
+//-------------------------------------//
+
+message RegisterUserRequest {
+    UserInfo user_info = 1;
+    string password = 2;
+}
+
+message RegisterUserResponse {
+}

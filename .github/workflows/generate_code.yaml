@@ -1,0 +1,32 @@
+name: generate_code
+on:
+  pull_request:
+    branches:
+      - main
+      - development
+    types:
+      - closed
+
+jobs:
+  generate_code:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+    # Run `git checkout`
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Branch name
+          run: echo running on branch ${GITHUB_REF##*/}
+      # Install the `buf` CLI
+      - name: Setup
+        uses: bufbuild/buf-setup-action@v1.13.0
+        with:
+          version: 1.13.0
+      - name: Create local changes
+        run: buf generate
+      - name: Commit & Push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Generate files

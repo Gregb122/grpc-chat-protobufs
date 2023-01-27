@@ -1,0 +1,23 @@
+name: CI
+on: push
+jobs:
+  lint-and-breaking-change-detection:
+    runs-on: ubuntu-latest
+    steps:
+      # Run `git checkout`
+      - name: Checkout
+        uses: actions/checkout@v2
+      # Install the `buf` CLI
+      - name: Setup
+        uses: bufbuild/buf-setup-action@v1.13.0
+        with:
+          version: 1.13.0
+      # Lint the Buf module in the `github-actions` directory
+      - name: Lint
+        uses: bufbuild/buf-lint-action@v1
+      # Detect breaking changes.
+      # against the current `main` branch
+      - name: Breaking change detection against `main`
+        uses: bufbuild/buf-breaking-action@v1
+        with:
+          against: https://github.com/gregb122/grpc-chat-protobufs.git#branch=main,ref=HEAD~1
